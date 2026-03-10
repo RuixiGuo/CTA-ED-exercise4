@@ -172,7 +172,7 @@ kaneko_dfm_study1 <- dfm_trim(kaneko_dfm_study1, min_docfreq = 2, docfreq_type =
 dim(kaneko_dfm_study1)
 ```
 
-## Exercises
+## Exercises - RUIXI GUO
 
 1. Estimate a wordfish model for with Kaneko (2021)'s data
 
