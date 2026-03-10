@@ -2,7 +2,9 @@
 title: "CTA-ED Exercise 4: Scaling techniques (with correct answers)"
 author: "Marion Lieutaud"
 date: "6/03/2024"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 # Introduction
@@ -181,7 +183,7 @@ dim(kaneko_dfm_study1)
 Write a paragraph here explaining and interpreting your results 
 
 2. Visualize the results
-```{r, fig.cap="Wordfish model estimates of Japanese newspapers' editorial texts}
+```{r, fig.cap="Wordfish model estimates of Japanese newspaper editorial texts"}
 ## We can then plot our estimates of the thetas---i.e., the estimates of the latent Japanese newspaper position.
 ```
 
