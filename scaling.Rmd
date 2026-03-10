@@ -2,7 +2,9 @@
 title: "CTA-ED Exercise 4: Scaling techniques (with correct answers)"
 author: "Marion Lieutaud"
 date: "6/03/2024"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 # Introduction
@@ -97,7 +99,9 @@ dim(dfm_newstweets)
 
 #### estimate the Wordfish model ####
 set.seed(123L)
+
 dfm_newstweets_results <- textmodel_wordfish(dfm_newstweets)
+
 
 ```
 
@@ -187,7 +191,7 @@ The remaining newspapers all have negative theta values, among which Chunichi(ap
 
 
 2. Visualize the results
-```{r, fig.cap="Wordfish model estimates of Japanese newspapers' editorial texts}
+```{r, fig.cap="Wordfish model estimates of Japanese newspaper editorial texts"}
 ## We can then plot our estimates of the thetas---i.e., the estimates of the latent Japanese newspaper position.
 ```
 
@@ -224,4 +228,43 @@ They also focus on the international economy, as reflected in terms like "環太
 
 
 Don't forget to knit!
+
+
+
+
+
+```{r}
+# Exercise 1 by shiqin xiang
+
+# check document variables stored in the dfm
+docvars(kaneko_dfm)
+
+# group all editorials by newspaper so that each newspaper becomes one document
+kaneko_dfm_newspaper <- dfm_group(kaneko_dfm, groups = Newspaper)
+
+# check how many documents remain after grouping (should equal number of newspapers)
+ndoc(kaneko_dfm_newspaper)
+
+```
+
+```{r}
+# estimate the Wordfish scaling model
+set.seed(123)
+kaneko_wordfish <- textmodel_wordfish(kaneko_dfm_newspaper)
+
+# inspect model summary including document positions and word parameters
+summary(kaneko_wordfish)
+
+```
+The Wordfish model estimates the positions of newspapers on a latent dimension based on their editorial language. The estimated theta values indicate where each newspaper is located on this scale. Newspapers with negative theta values, such as Chunichi (-1.83) and Asahi (-1.13), appear on the left side of the dimension, while those with positive values, such as Nikkei (1.17) and Yomiuri (0.94), appear on the right side. This suggests that the language used in these newspapers’ editorials differs systematically. Newspapers positioned near the centre of the scale, such as Chugoku (-0.14) and Mainichi (0.41), exhibit more moderate linguistic patterns. 
+
+```{r}
+# Exercise 2 by shiqin xiang
+
+# plot the estimated newspaper positions
+
+textplot_scale1d(kaneko_wordfish)
+
+```
+In the figure, Chunichi and Asahi are located on the left side of the scale, while Nikkei and Yomiuri appear on the right side. This suggests that the editorials of these newspapers differ systematically in their language use. Although the dimension is not explicitly labeled, it may reflect underlying editorial or ideological differences across newspapers.
 
