@@ -91,14 +91,13 @@ dfm_newstweets <- dfm_group(dfm_tweets, groups = newspaper)
 # remove words not used by two or more newspapers
 dfm_newstweets <- dfm_trim(dfm_newstweets, 
                                 min_docfreq = 2, docfreq_type = "count")
-
+#dfm_trim is used for change the dfm, min docfreq means keeping words that are used at least by two newspapers
 ## size of the document-feature matrix
 dim(dfm_newstweets)
 
 #### estimate the Wordfish model ####
 set.seed(123L)
-dfm_newstweets_results <- textmodel_wordfish(dfm_newstweets, 
-                                             sparse = TRUE)
+dfm_newstweets_results <- textmodel_wordfish(dfm_newstweets)
 
 ```
 
@@ -127,7 +126,6 @@ textplot_scale1d(dfm_newstweets_results, margin = "features")
 And we can also look at these features.
 
 ```{r}
-
 features <- dfm_newstweets_results[["features"]]
 
 betas <- dfm_newstweets_results[["beta"]]
@@ -176,16 +174,54 @@ dim(kaneko_dfm_study1)
 
 ```{r}
 ## estimate the Wordfish model
-
+set.seed(123L)
+dfm_kaneko_results <- textmodel_wordfish(kaneko_dfm_study1)
+summary(dfm_kaneko_results)
 ```
+
 Write a paragraph here explaining and interpreting your results 
+
+The theta values of Yomiuri, Nikkei, and Sankeiare significantly greater than 0 (approximately 1.6 for Yomiuri, 1.26 for Nikkei, and 1.25 for Sankei), and all have standard errors less than 0.05. This indicates that these newspapers are classified as leaning toward a "right-leaning" position in the model.
+
+The remaining newspapers all have negative theta values, among which Chunichi(approximately -1.22), Asahi(approximately -0.99), and Kahoku(approximately -0.57) have the smallest (most negative) theta values, indicating that they are classified as leaning toward a "left-leaning" or center-left position in the model.
+
 
 2. Visualize the results
 ```{r, fig.cap="Wordfish model estimates of Japanese newspapers' editorial texts}
 ## We can then plot our estimates of the thetas---i.e., the estimates of the latent Japanese newspaper position.
 ```
 
+```{r}
+textplot_scale1d(dfm_kaneko_results)
+```
+
+```{r}
+textplot_scale1d(dfm_kaneko_results, margin = "features")
+```
+
+```{r}
+
+features <- dfm_kaneko_results[["features"]]
+
+betas <- dfm_kaneko_results[["beta"]]    
+
+kaneko_betas <- as.data.frame(cbind(features, betas))
+kaneko_betas$betas <- as.numeric(kaneko_betas$betas)
+
+kaneko_betas %>%
+  arrange(desc(betas)) %>%
+  top_n(20) %>% 
+  kbl() %>%
+  kable_styling(bootstrap_options = "striped")
+
+```
+
 Write here the interpretation of your plot(s)
+
+Right-leaning newspapers tend to discuss international issues using a framework of "active cooperation", such as "国際平和協力" (beta ≈ 3.07), "世界平和" (beta ≈ 2.67), and "世界秩序" (beta = 2.42). Among these, "国際平和協力" has the highest beta value, making it the most distinctive term for differentiating media political stances.
+
+They also focus on the international economy, as reflected in terms like "環太平洋経済連携協定" (beta ≈ 2.11), "消費税率" (beta ≈ 2.11), and "基礎的財政収支" (beta ≈ 2.11), which collectively indicate that right-leaning newspapers pay greater attention to economic policy and free trade.
+
 
 Don't forget to knit!
 
